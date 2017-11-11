@@ -75,3 +75,24 @@ TEST_F(Str2FloatTest, test_exp_float)
   ASSERT_FLOAT_EQ(str2float("-0.618e12", NAN), -0.618e12f);
   ASSERT_FLOAT_EQ(str2float("-.618e6", NAN), -.618e6f);
 }
+
+TEST_F(Str2FloatTest, test_invalid_float)
+{
+  ASSERT_TRUE(std::isnan(str2float(".")));
+  ASSERT_TRUE(std::isnan(str2float("-.")));
+
+  ASSERT_TRUE(std::isnan(str2float(".e")));
+  ASSERT_TRUE(std::isnan(str2float("-.e")));
+
+  ASSERT_TRUE(std::isnan(str2float(".4e")));
+  ASSERT_TRUE(std::isnan(str2float("-.3e")));
+
+  ASSERT_TRUE(std::isnan(str2float("3.14e")));
+  ASSERT_TRUE(std::isnan(str2float("-0.618e")));
+
+  ASSERT_TRUE(std::isnan(str2float("3.e")));
+  ASSERT_TRUE(std::isnan(str2float("-618.e")));
+
+  ASSERT_TRUE(std::isnan(str2float("314e")));
+  ASSERT_TRUE(std::isnan(str2float("-618e")));
+}

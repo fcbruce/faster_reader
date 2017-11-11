@@ -22,6 +22,7 @@ static float str2float_impl(const char *s, float def=NAN)
 {
   float r = 0;
   bool neg = false;
+  bool has_digit = false;
 
   while (isspace(*s)) s++;
 
@@ -36,6 +37,7 @@ static float str2float_impl(const char *s, float def=NAN)
   {
     r = (r * 10.) + (*s - '0');
     s++;
+    has_digit = true;
   }
 
   if (*s == '.')
@@ -48,9 +50,12 @@ static float str2float_impl(const char *s, float def=NAN)
       f = (f * 10.) + (*s - '0');
       s++;
       e++;
+      has_digit = true;
     }
     r = r + f / pow(10, e);
   }
+
+  if (!has_digit) return def; // ., .e2, etc
 
   if (*s == 'e' || *s == 'E')
   {
@@ -63,6 +68,8 @@ static float str2float_impl(const char *s, float def=NAN)
       s++;
     }
     else if (*s == '+') s++;
+
+    if (!isdigit(*s)) return def; // 1e, .e, etc
 
     while (isdigit(*s))
     {
