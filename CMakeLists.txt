@@ -4,9 +4,17 @@ option(test "Build all tests" OFF)
 set(PROJECT_NAME faster_reader)
 project(${PROJECT_NAME})
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 include_directories(include)
 
-add_library(objcommon OBJECT src/common/common.cxx)
+file(GLOB_RECURSE SOURCES
+  src/*.cxx
+  src/*.h
+)
+
+add_library(objfr OBJECT ${SOURCES})
 
 
 ############################
@@ -20,7 +28,7 @@ if (test)
 
   include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-  add_executable(testfasterreader ${TEST_SOURCES} $<TARGET_OBJECTS:objcommon>)
+  add_executable(testfasterreader ${TEST_SOURCES} $<TARGET_OBJECTS:objfr>)
   target_link_libraries(testfasterreader gtest gtest_main)
 
   add_test(TestFasterReader testfasterreader)

@@ -10,17 +10,22 @@ namespace faster_reader {
 class CSVReader //: public Reader
 {
 public:
-  CSVReader();
+  CSVReader(const std::string &filepath) : filepath(filepath) {}
+  CSVReader(const char *filepath) : filepath(filepath) {}
   virtual ~CSVReader();
 
-  virtual int read();
+  virtual int read() = 0;
 
-  void export_column_name(char **name);
+  const char **export_columns_name();
+
+  virtual size_t get_ncol();
+  virtual size_t get_nrow();
 
 protected:
   void read_header();
 
-  std::vector<std::string> column_name;
+  std::vector<std::string> columns_name;
+  std::vector<const char *> columns_name_char_ptr;
   std::string filepath;
   std::ifstream ifs;
 };

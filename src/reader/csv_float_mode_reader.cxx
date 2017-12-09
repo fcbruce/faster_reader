@@ -9,14 +9,11 @@
 #include <boost/tokenizer.hpp>
 #include <cmath>
 
-#include "./csv_float_mode_reader.h"
+#include "common/common.h"
+#include "reader/csv_float_mode_reader.h"
 
 
 namespace faster_reader {
-
-CSVFloatModeReader::CSVFloatModeReader()
-{
-}
 
 CSVFloatModeReader::~CSVFloatModeReader()
 {
@@ -34,16 +31,29 @@ int CSVFloatModeReader::read()
   while (std::getline(ifs, buffer)) 
   {
     Tokenizer datum(buffer);
+    size_t col_cnt = 0;
     for (const auto &data : datum) 
     {
+      col_cnt++;
+      if (col_cnt > get_ncol()) break;
       const char *c_data = data.c_str();
       float value = str2float(c_data, NAN);
+      this->data.push_back(value);
     }
-
   }
-  
 
-  
+  return 0;
+}
+
+const float *CSVFloatModeReader::export_data()
+{
+  if (data.size() == 0) return nullptr;
+  return &data[0];
+}
+
+size_t CSVFloatModeReader::get_nrow()
+{
+  return data.size() / get_ncol();
 }
 
 
